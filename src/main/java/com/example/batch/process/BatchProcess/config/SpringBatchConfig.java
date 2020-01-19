@@ -3,6 +3,7 @@ package com.example.batch.process.BatchProcess.config;
 import com.example.batch.process.BatchProcess.entities.User;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
@@ -20,7 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
 @Configuration
-public class SpringBatchConfig {
+@EnableBatchProcessing
+class SpringBatchConfig {
 
     @Bean
     public Job getBatchJob(JobBuilderFactory jobBuilderFactory,
@@ -45,7 +47,7 @@ public class SpringBatchConfig {
     }
 
     @Bean
-    public FlatFileItemReader<User> flatFileItemReader(@Value("${input}") Resource resource) {
+    public FlatFileItemReader flatFileItemReader(@Value("${input}") Resource resource) {
         FlatFileItemReader flatFileItemReader = new FlatFileItemReader<>();
         flatFileItemReader.setResource(resource);
         flatFileItemReader.setName("CSS-Reader");
@@ -62,7 +64,7 @@ public class SpringBatchConfig {
 
         delimitedLineTokenizer.setDelimiter(",");
         delimitedLineTokenizer.setStrict(false);
-        delimitedLineTokenizer.setNames(new String[]{"id", "name", "department", "salary"});
+        delimitedLineTokenizer.setNames("id", "name", "department", "salary");
 
         userBeanWrapperFieldSetMapper.setTargetType(User.class);
 
